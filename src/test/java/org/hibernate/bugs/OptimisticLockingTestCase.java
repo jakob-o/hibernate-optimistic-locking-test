@@ -144,9 +144,10 @@ public class OptimisticLockingTestCase extends BaseCoreFunctionalTestCase {
 		assertEquals(1, exceptions.size());
 		Exception e = exceptions.get(0);
 		assertTrue(e instanceof OptimisticLockException);
-		Object entity = ((OptimisticLockException) e).getEntity();
-		assertTrue("Entity acutally is " + entity, entity instanceof VersionedEntity);
 		Throwable cause = e.getCause();
 		assertTrue("Cause actually is " + cause, cause instanceof StaleObjectStateException);
+		StaleObjectStateException staleObjectStateException = (StaleObjectStateException) cause;
+		assertEquals(entityId, staleObjectStateException.getIdentifier());
+		assertEquals(VersionedEntity.class.getName(), staleObjectStateException.getEntityName());
 	}
 }
